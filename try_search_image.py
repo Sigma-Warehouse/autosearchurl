@@ -6,6 +6,8 @@ import pyperclip
 import pyautogui as pya
 from dotenv import load_dotenv
 
+#git clone https://github.com/Sigma-Warehouse/autosearchurl.git
+
 load_dotenv()
 CSV_PATH = os.getenv("CSV_PATH")
 
