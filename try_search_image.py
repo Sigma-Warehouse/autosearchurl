@@ -6,33 +6,33 @@ import pyperclip
 import pyautogui as pya
 from dotenv import load_dotenv
 
-#git clone https://github.com/Sigma-Warehouse/autosearchurl.git
-
 load_dotenv()
 CSV_PATH = os.getenv("CSV_PATH")
 
 if __name__ == "__main__":
+    time.sleep(2)
+    tab_x, tab_y =  290,214
+    url_x, url_y =  261,258
+    close_tab_x, close_tab_y = 473,219
+    count = 0
+    start_line = 4272  # 開始行を設定
 
-    time.sleep(5)
-    tab_x, tab_y =  264,19
-    url_x, url_y =  443,70
-    close_tab_x, close_tab_y = 466,19
-    
     with open(CSV_PATH, "r", encoding="utf-8") as file:
         reader = csv.reader(file)
-        for row in reader:
-            search_url = row[0]   
-            time.sleep(4)
+        for i, row in enumerate(reader, 1):  
+            if i < start_line:
+                continue    
             pya.click(tab_x, tab_y)
             time.sleep(1)
             pya.click(url_x, url_y)
-            time.sleep(1)
+            search_url = row[1]
             pya.write(search_url)
             time.sleep(1)
             pya.press('enter')
-            time.sleep(2)
+            time.sleep(4)
             pya.click(close_tab_x, close_tab_y)
-            
+            count += 1
+            print(f"実行回数: {count}")
 
 #マウスカーソルで座標の取得
 # while True:
