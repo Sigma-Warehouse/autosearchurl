@@ -27,17 +27,19 @@ options.add_argument('--profile-directory=Default')
 driver = webdriver.Chrome(options=options)
 
 def main():
+    global driver
     # CSVファイルを開く
     with open(csv_file_path, newline='', encoding='utf-8') as csvfile:
         reader = csv.reader(csvfile)
 
-        #skip the first n rows.
-        for _ in range(skip_n):
+        #skip the first n +1 rows.
+        for _ in range(skip_n+1):
             next(reader)
 
         for row in reader:
             url = row[1]  # URLを読み込む
             try:
+                print(f"{exe_count}, {url}")
                 # URLを新しいタブで開く
                 driver.execute_script("window.open('');")  # 新しいタブを開く
                 driver.switch_to.window(driver.window_handles[-1])  # 新しいタブに切り替え
@@ -52,6 +54,7 @@ def main():
                 driver.switch_to.window(driver.window_handles[0])  # 最初のタブに戻る
             except Exception as e:
                 print(f"URL: {url}, エラーが発生しました: {e}")
+                #Reopen the driver in case of error occurs
                 driver.quit()
                 driver = webdriver.Chrome(options=options)
                 continue  # 次のループへ進む
