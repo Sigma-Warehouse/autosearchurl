@@ -7,9 +7,10 @@ import chromedriver_binary
 
 # CSVファイルのパス
 csv_file_path = '/Users/yurainagaki/Desktop/autogui/verified_online (1).csv'
-
+user_data_dir = r'C:\Users\[ユーザー名]\AppData\Local\Google\Chrome\'
 # Chromeのオプション設定
 options = Options()
+options.add_argument(f"user-data-dir={user_data_dir}")
 # 必要に応じてオプションを追加
 # options.add_argument('--headless')  # ヘッドレスモードを有効にする場合
 
