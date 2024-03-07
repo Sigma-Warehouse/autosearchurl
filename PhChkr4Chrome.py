@@ -9,8 +9,8 @@ import chromedriver_binary
 skip_n = 0
 
 # CSVファイルのパス
-csv_file_path = r'C:\'
-user_data_dir = r'C:\Users\[ユーザー名]\AppData\Local\Google\Chrome\'
+csv_file_path = r'C:\user2\Desktop\autosearchurl\url.csv'
+user_data_dir = r'C:\Users\[ユーザー名]\AppData\Local\Google\Chrome\User Data'
 
 # Chromeのオプション設定
 options = Options()
@@ -22,6 +22,9 @@ options.add_argument('--profile-directory=Default')
 
 # WebDriverの初期化
 driver = webdriver.Chrome(options=options)
+
+#timeout setting
+driver.set_page_load_timeout(10)
 
 def main():
     global driver
