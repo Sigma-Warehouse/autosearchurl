@@ -24,7 +24,8 @@ options.add_argument('--profile-directory=Default')
 driver = webdriver.Chrome(options=options)
 
 #timeout setting
-driver.set_page_load_timeout(10)
+driver.set_page_load_timeout(5)
+driver.set_script_timeout(5)
 
 def main():
     global driver
