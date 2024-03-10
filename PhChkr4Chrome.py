@@ -100,7 +100,7 @@ def main():
 
                 # URLを開いた後の処理（必要に応じて）
                 safe_search, redirections, error_flg = check_safe_search(0, safe_search)
-                if error_flg != True:
+                if not error_flg:
                     layerx = check_layerx()
             except Exception as e:
                 print(f"エラーが発生しました: {e.msg}")
