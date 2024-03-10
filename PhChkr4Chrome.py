@@ -28,10 +28,9 @@ def init_driver():
 
     return webdriver.Chrome(options=options)
 
-def check_safe_search(n):
+def check_safe_search(n, flag):
     global driver
-    
-    flag = False
+
     try:
         # Click the "details-button"
         details_button = driver.find_element(By.ID, "details-button")
@@ -47,7 +46,7 @@ def check_safe_search(n):
         if n > 100:
             return flag, n
 
-        return check_safe_search(n+1)
+        return check_safe_search(n+1, flag)
     except:
         return flag, n
 
@@ -92,10 +91,10 @@ def main():
                 driver.get(url)  # URLを開く
 
                 # URLを開いた後の処理（必要に応じて）
-                safe_search, redirections = check_safe_search(0)
+                safe_search, redirections = check_safe_search(0, safe_search)
                 layerx = check_layerx()
             except Exception as e:
-                print(f"URL: {url}, エラーが発生しました: {e.msg}")
+                print(f"エラーが発生しました: {e.msg}")
                 error_flg = True
                 pass
 
