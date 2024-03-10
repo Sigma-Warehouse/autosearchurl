@@ -12,7 +12,7 @@ skip_n = 0
 csv_result_path = "output.csv"
 
 # Define CSV column headers
-fieldnames = ["id", "url", "status", "chrome", "layerx", "error", "redirections"]
+fieldnames = ["id", "url", "status", "chrome", "layerx", "error", "redirections", "japanese"]
 
 # CSVファイルのパス
 csv_file_path = r'C:\user2\Desktop\autosearchurl\url.csv'
@@ -28,6 +28,20 @@ def init_driver():
     # options.add_argument('--headless')
 
     return webdriver.Chrome(options=options)
+
+def is_japanese():
+    global driver
+
+    title = driver.title
+    for char in title:
+        if '\u3000' <= char <= '\u303f' or \
+            '\u3040' <= char <= '\u309f' or \
+            '\u30a0' <= char <= '\u30ff' or \
+            '\u3400' <= char <= '\u4dbf' or \
+            '\u4e00' <= char <= '\u9fff' or \
+            '\uff66' <= char <= '\uff9f':
+            return True
+    return False
 
 def check_safe_search(n, flag):
     global driver
@@ -91,6 +105,7 @@ def main():
             safe_search = False
             layerx = False
             redirections = 0
+            japanese = 0
             print(f"{exe_count}, {url}")
             try:
                 # URLを新しいタブで開く
@@ -101,6 +116,7 @@ def main():
                 # URLを開いた後の処理（必要に応じて）
                 safe_search, redirections, error_flg = check_safe_search(0, safe_search)
                 if not error_flg:
+                    japanese = is_japanese()
                     layerx = check_layerx()
             except Exception as e:
                 print(f"エラーが発生しました: {e.msg}")
@@ -117,7 +133,7 @@ def main():
                 driver.quit()
                 driver = init_driver()
             finally:
-                result = {"id": row[0], "url": row[1], "status": row[2], "chrome": safe_search, "layerx": layerx, "error": error_flg, "redirections": redirections}
+                result = {"id": row[0], "url": row[1], "status": row[2], "chrome": safe_search, "layerx": layerx, "error": error_flg, "redirections": redirections, "japanese": japanese}
                 data.append(result)
 
     # 全てのURLの処理が終わったら、ブラウザを閉じる
