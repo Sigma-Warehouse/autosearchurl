@@ -2,6 +2,7 @@ import csv
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import NoSuchElementException
 import chromedriver_binary
 
 #skip rows
@@ -32,6 +33,7 @@ def check_safe_search(n, flag):
     global driver
 
     try:
+        error = False
         # Click the "details-button"
         details_button = driver.find_element(By.ID, "details-button")
         details_button.click()
@@ -44,11 +46,17 @@ def check_safe_search(n, flag):
 
         #limit the number of redirects to 100 or less.
         if n > 100:
-            return flag, n
+            error = True
+            return flag, n, error
 
         return check_safe_search(n+1, flag)
-    except:
-        return flag, n
+    except NoSuchElementException:
+        error = False
+        return flag, n, error
+    except Exception as e:
+        print(f"エラーが発生しました: {e}")
+        error = True
+        return flag, n, error
 
 def check_layerx():
     global driver
@@ -91,8 +99,9 @@ def main():
                 driver.get(url)  # URLを開く
 
                 # URLを開いた後の処理（必要に応じて）
-                safe_search, redirections = check_safe_search(0, safe_search)
-                layerx = check_layerx()
+                safe_search, redirections, error_flg = check_safe_search(0, safe_search)
+                if error_flg != True:
+                    layerx = check_layerx()
             except Exception as e:
                 print(f"エラーが発生しました: {e.msg}")
                 error_flg = True
@@ -131,6 +140,6 @@ if __name__ == '__main__':
     #timeout setting
     driver.set_page_load_timeout(5)
     driver.set_script_timeout(5)
-    driver.implicitly_wait(2)
+    driver.implicitly_wait(5)
 
     main()
