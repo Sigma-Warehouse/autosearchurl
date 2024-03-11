@@ -1,5 +1,6 @@
 import csv
 import time
+import datetime
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -123,7 +124,7 @@ def main():
             layerx = False
             redirections = 0
             japanese = False
-            print(f"{exe_count}, {url}")
+            print(f"{exe_count}, {url}, {datetime.datetime.now()}")
             try:
                 # URLを新しいタブで開く
                 driver.execute_script("window.open('');")  # 新しいタブを開く
