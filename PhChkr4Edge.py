@@ -52,12 +52,13 @@ def check_safe_search(n, flag):
 
     try:
         error = False
+
         # Click the "details-button"
-        details_button = driver.find_element(By.ID, "details-button")
-        details_button.click()
+        more_info_button = driver.find_element(By.ID, "moreInformationDropdownLink")
+        more_info_button.click()
 
         # Click the "proceed-link"
-        proceed_link = driver.find_element(By.ID, "proceed-link")
+        proceed_link = driver.find_element(By.ID, "overrideLink")
         proceed_link.click()
 
         flag = True
