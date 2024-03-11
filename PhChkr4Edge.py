@@ -22,7 +22,7 @@ def init_driver():
     # Edgeのオプション設定
     options = Options()
     options.add_argument(f"user-data-dir={user_data_dir}")
-    options.add_argument('profile-directory=Default')
+    options.add_argument('--profile-directory=Default')
 
     # ヘッドレスモードを有効にする場合
     # options.add_argument('--headless')
