@@ -1,15 +1,15 @@
 import csv
+import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
-import chromedriver_binary
 
 #skip rows
 skip_n = 0
 
 # Define CSV file path
-csv_result_path = "output.csv"
+csv_result_path = "output_chrome.csv"
 
 # Define CSV column headers
 fieldnames = ["id", "url", "status", "chrome", "layerx", "error", "redirections", "japanese"]
@@ -80,6 +80,7 @@ def check_layerx():
     global driver
 
     try:
+        time.sleep(3)
         driver.find_element(By.XPATH, '//lit-block-alert[contains(@content, "ALsw3b12!")]')
         return True
     except:
@@ -149,7 +150,7 @@ def main():
                 driver.quit()
                 driver = init_driver()
             finally:
-                result = {"id": row[0], "url": row[1], "status": row[2], "chrome": safe_search, "layerx": layerx, "error": error_flg, "redirections": redirections, "japanese": japanese}
+                result = {"id": exe_count, "url": row[1], "status": row[2], "chrome": safe_search, "layerx": layerx, "error": error_flg, "redirections": redirections, "japanese": japanese}
                 write_to_csv([result])
                 print(result)
 
@@ -162,7 +163,7 @@ if __name__ == '__main__':
     driver = init_driver()
     #timeout setting
     driver.set_page_load_timeout(5)
-    driver.set_script_timeout(5)
+    driver.set_script_timeout(2)
     driver.implicitly_wait(5)
 
     main()

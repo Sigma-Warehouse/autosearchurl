@@ -1,34 +1,51 @@
 import csv
+import time
+from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.edge.options import Options
 from selenium.common.exceptions import NoSuchElementException
-from msedge.selenium_tools import Edge, EdgeOptions
 
 #skip rows
 skip_n = 0
 
 # Define CSV file path
-csv_result_path = "output.csv"
+csv_result_path = "output_edge.csv"
 
 # Define CSV column headers
-fieldnames = ["id", "url", "status", "edge", "layerx", "error", "redirections"]
+fieldnames = ["id", "url", "status", "edge", "layerx", "error", "redirections", "japanese"]
 
 # CSVファイルのパス
 csv_file_path = r'C:\user2\Desktop\autosearchurl\url.csv'
 user_data_dir = r'C:\Users\[ユーザー名]\AppData\Local\Microsoft\Edge\User Data'
 
-#web driver exe path
-webdriver_path = r''
-
 def init_driver():
     # Edgeのオプション設定
-    options = EdgeOptions()
+    options = Options()
     options.add_argument(f"user-data-dir={user_data_dir}")
-    options.add_argument('--profile-directory=Default')
+    options.add_argument('profile-directory=Default')
 
     # ヘッドレスモードを有効にする場合
     # options.add_argument('--headless')
 
-    return Edge(executable_path=webdriver_path, options=options)
+    return webdriver.Edge(options=options)
+
+def is_japanese():
+    global driver
+
+    try:
+        title = driver.title
+        for char in title:
+            if '\u3000' <= char <= '\u303f' or \
+                '\u3040' <= char <= '\u309f' or \
+                '\u30a0' <= char <= '\u30ff' or \
+                '\u3400' <= char <= '\u4dbf' or \
+                '\u4e00' <= char <= '\u9fff' or \
+                '\uff66' <= char <= '\uff9f':
+                return True
+        return False
+    except Exception as e:
+        print(f"Error at is_japanese: {e}")
+        return False
 
 def check_safe_search(n, flag):
     global driver
@@ -36,11 +53,11 @@ def check_safe_search(n, flag):
     try:
         error = False
         # Click the "details-button"
-        more_info_button = driver.find_element(By.ID, "moreInformationDropdownLink")
-        more_info_button.click()
+        details_button = driver.find_element(By.ID, "details-button")
+        details_button.click()
 
         # Click the "proceed-link"
-        proceed_link = driver.find_element(By.ID, "overrideLink")
+        proceed_link = driver.find_element(By.ID, "proceed-link")
         proceed_link.click()
 
         flag = True
@@ -63,19 +80,32 @@ def check_layerx():
     global driver
 
     try:
+        time.sleep(3)
         driver.find_element(By.XPATH, '//lit-block-alert[contains(@content, "ALsw3b12!")]')
         return True
     except:
         return False
 
+def write_to_csv(data):
+    with open(csv_result_path, 'a', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        # Write data rows
+        for row in data:
+            writer.writerow(row)
+
 def main():
     global driver
 
-    #For result
-    data = []
-
     #Execution count
     exe_count = 0
+
+    # Write header to CSV file
+    with open(csv_result_path, 'w', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        # Write header
+        writer.writeheader()
 
     # CSVファイルを開く
     with open(csv_file_path, newline='', encoding='utf-8') as csvfile:
@@ -92,6 +122,7 @@ def main():
             safe_search = False
             layerx = False
             redirections = 0
+            japanese = False
             print(f"{exe_count}, {url}")
             try:
                 # URLを新しいタブで開く
@@ -102,6 +133,7 @@ def main():
                 # URLを開いた後の処理（必要に応じて）
                 safe_search, redirections, error_flg = check_safe_search(0, safe_search)
                 if not error_flg:
+                    japanese = is_japanese()
                     layerx = check_layerx()
             except Exception as e:
                 print(f"エラーが発生しました: {e.msg}")
@@ -118,29 +150,20 @@ def main():
                 driver.quit()
                 driver = init_driver()
             finally:
-                result = {"id": row[0], "url": row[1], "status": row[2], "edge": safe_search, "layerx": layerx, "error": error_flg, "redirections": redirections}
-                data.append(result)
+                result = {"id": exe_count, "url": row[1], "status": row[2], "edge": safe_search, "layerx": layerx, "error": error_flg, "redirections": redirections, "japanese": japanese}
+                write_to_csv([result])
+                print(result)
 
     # 全てのURLの処理が終わったら、ブラウザを閉じる
     driver.quit()
 
-    # Write data to CSV file
-    with open(csv_result_path, 'w', newline='') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
-        # Write header
-        writer.writeheader()
-
-        # Write data rows
-        for row in data:
-            writer.writerow(row)
 
 if __name__ == '__main__':
     # WebDriverの初期化
     driver = init_driver()
     #timeout setting
     driver.set_page_load_timeout(5)
-    driver.set_script_timeout(5)
+    driver.set_script_timeout(2)
     driver.implicitly_wait(5)
 
     main()
