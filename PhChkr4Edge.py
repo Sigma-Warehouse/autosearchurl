@@ -1,8 +1,7 @@
 import csv
-from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.edge.options import Options
 from selenium.common.exceptions import NoSuchElementException
+from msedge.selenium_tools import Edge, EdgeOptions
 
 #skip rows
 skip_n = 0
@@ -11,22 +10,25 @@ skip_n = 0
 csv_result_path = "output.csv"
 
 # Define CSV column headers
-fieldnames = ["id", "url", "status", "chrome", "layerx", "error", "redirections"]
+fieldnames = ["id", "url", "status", "edge", "layerx", "error", "redirections"]
 
 # CSVファイルのパス
 csv_file_path = r'C:\user2\Desktop\autosearchurl\url.csv'
 user_data_dir = r'C:\Users\[ユーザー名]\AppData\Local\Microsoft\Edge\User Data'
 
+#web driver exe path
+webdriver_path = r''
+
 def init_driver():
     # Edgeのオプション設定
-    options = Options()
+    options = EdgeOptions()
     options.add_argument(f"user-data-dir={user_data_dir}")
     options.add_argument('--profile-directory=Default')
 
     # ヘッドレスモードを有効にする場合
     # options.add_argument('--headless')
 
-    return webdriver.Edge(options=options)
+    return Edge(executable_path=webdriver_path, options=options)
 
 def check_safe_search(n, flag):
     global driver
@@ -116,7 +118,7 @@ def main():
                 driver.quit()
                 driver = init_driver()
             finally:
-                result = {"id": row[0], "url": row[1], "status": row[2], "chrome": safe_search, "layerx": layerx, "error": error_flg, "redirections": redirections}
+                result = {"id": row[0], "url": row[1], "status": row[2], "edge": safe_search, "layerx": layerx, "error": error_flg, "redirections": redirections}
                 data.append(result)
 
     # 全てのURLの処理が終わったら、ブラウザを閉じる

@@ -121,7 +121,7 @@ def main():
             safe_search = False
             layerx = False
             redirections = 0
-            japanese = 0
+            japanese = False
             print(f"{exe_count}, {url}")
             try:
                 # URLを新しいタブで開く
@@ -150,7 +150,7 @@ def main():
                 driver = init_driver()
             finally:
                 result = {"id": row[0], "url": row[1], "status": row[2], "chrome": safe_search, "layerx": layerx, "error": error_flg, "redirections": redirections, "japanese": japanese}
-                write_to_csv(result)
+                write_to_csv([result])
                 print(result)
 
     # 全てのURLの処理が終わったら、ブラウザを閉じる
