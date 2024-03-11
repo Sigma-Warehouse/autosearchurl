@@ -32,16 +32,20 @@ def init_driver():
 def is_japanese():
     global driver
 
-    title = driver.title
-    for char in title:
-        if '\u3000' <= char <= '\u303f' or \
-            '\u3040' <= char <= '\u309f' or \
-            '\u30a0' <= char <= '\u30ff' or \
-            '\u3400' <= char <= '\u4dbf' or \
-            '\u4e00' <= char <= '\u9fff' or \
-            '\uff66' <= char <= '\uff9f':
-            return True
-    return False
+    try:
+        title = driver.title
+        for char in title:
+            if '\u3000' <= char <= '\u303f' or \
+                '\u3040' <= char <= '\u309f' or \
+                '\u30a0' <= char <= '\u30ff' or \
+                '\u3400' <= char <= '\u4dbf' or \
+                '\u4e00' <= char <= '\u9fff' or \
+                '\uff66' <= char <= '\uff9f':
+                return True
+        return False
+    except Exception as e:
+        print(f"Error at is_japanese: {e}")
+        return False
 
 def check_safe_search(n, flag):
     global driver
@@ -135,6 +139,7 @@ def main():
             finally:
                 result = {"id": row[0], "url": row[1], "status": row[2], "chrome": safe_search, "layerx": layerx, "error": error_flg, "redirections": redirections, "japanese": japanese}
                 data.append(result)
+                print(result)
 
     # 全てのURLの処理が終わったら、ブラウザを閉じる
     driver.quit()
