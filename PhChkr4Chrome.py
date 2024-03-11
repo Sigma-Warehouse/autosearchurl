@@ -85,14 +85,26 @@ def check_layerx():
     except:
         return False
 
+def write_to_csv(data):
+    with open(csv_result_path, 'a', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        # Write data rows
+        for row in data:
+            writer.writerow(row)
+
 def main():
     global driver
 
-    #For result
-    data = []
-
     #Execution count
     exe_count = 0
+
+    # Write header to CSV file
+    with open(csv_result_path, 'w', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        # Write header
+        writer.writeheader()
 
     # CSVファイルを開く
     with open(csv_file_path, newline='', encoding='utf-8') as csvfile:
@@ -138,22 +150,12 @@ def main():
                 driver = init_driver()
             finally:
                 result = {"id": row[0], "url": row[1], "status": row[2], "chrome": safe_search, "layerx": layerx, "error": error_flg, "redirections": redirections, "japanese": japanese}
-                data.append(result)
+                write_to_csv(result)
                 print(result)
 
     # 全てのURLの処理が終わったら、ブラウザを閉じる
     driver.quit()
 
-    # Write data to CSV file
-    with open(csv_result_path, 'w', newline='') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
-        # Write header
-        writer.writeheader()
-
-        # Write data rows
-        for row in data:
-            writer.writerow(row)
 
 if __name__ == '__main__':
     # WebDriverの初期化
