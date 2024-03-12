@@ -94,7 +94,12 @@ def write_to_csv(data):
 
         # Write data rows
         for row in data:
-            writer.writerow(row)
+            try:
+                writer.writerow(row)
+            except:
+                print(f"Error at writing csv: {row}")
+                error_row = {"id": row["id"], "url": "error", "status": row["status"], "edge": row["edge"], "layerx": row["layerx"], "error": row["error"], "redirections": row["redirections"], "japanese": row["japanese"]}
+                writer.writerow(error_row)
 
 def main():
     global driver
