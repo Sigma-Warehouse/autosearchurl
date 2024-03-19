@@ -190,3 +190,6 @@ if __name__ == '__main__':
     driver.implicitly_wait(5)
 
     main()
+
+#https://bafybeicjw4fbkdsdvu52gimfidueptpktmsounlctqbpz5mcuyxdogsucq.ipfs.nftstorage.link/
+#https://bafybeicjw4fbkdsdvu52gimfidueptpktmsounlctqbpz5mcuyxdogsucq.ipfs.nftstorage.link/
