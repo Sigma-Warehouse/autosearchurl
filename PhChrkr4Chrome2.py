@@ -114,7 +114,6 @@ def write_to_csv(data):
                 error_row = {"id": row["id"], "url": "error", "status": row["status"], "chrome": row["chrome"], "layerx": row["layerx"], "CDN":row["cdn"], "error": row["error"], "redirections": row["redirections"], "japanese": row["japanese"]}
                 writer.writerow(error_row)
 
-
 def main():
     global driver
 
