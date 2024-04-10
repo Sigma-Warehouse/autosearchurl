@@ -13,7 +13,7 @@ skip_n = 0
 csv_result_path = "output_edge2.csv"
 
 # Define CSV column headers
-fieldnames = ["id", "url", "status", "chrome", "layerx", "CDN", "error", "redirections", "japanese"]
+fieldnames = ["id", "url", "status", "edge", "layerx", "CDN", "error", "redirections", "japanese"]
 
 # CSVファイルのパス
 csv_file_path = r'C:\user2\Desktop\autosearchurl\url.csv'
@@ -110,7 +110,7 @@ def write_to_csv(data):
                 writer.writerow(row)
             except:
                 print(f"Error at writing csv: {row}")
-                error_row = {"id": row["id"], "url": "error", "status": row["status"], "chrome": row["chrome"], "layerx": row["layerx"], "CDN":row["cdn"], "error": row["error"], "redirections": row["redirections"], "japanese": row["japanese"]}
+                error_row = {"id": row["id"], "url": "error", "status": row["status"], "edge": row["edge"], "layerx": row["layerx"], "CDN":row["CDN"], "error": row["error"], "redirections": row["redirections"], "japanese": row["japanese"]}
                 writer.writerow(error_row)
 
 def main():
@@ -171,7 +171,7 @@ def main():
                 driver.quit()
                 driver = init_driver()
             finally:
-                result = {"id": exe_count, "url": row[1], "status": row[2], "chrome": safe_search, "layerx": layerx, "CDN":cdn, "error": error_flg, "redirections": redirections, "japanese": japanese}
+                result = {"id": exe_count, "url": row[1], "status": row[2], "edge": safe_search, "layerx": layerx, "CDN":cdn, "error": error_flg, "redirections": redirections, "japanese": japanese}
                 write_to_csv([result])
                 print(result)
 

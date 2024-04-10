@@ -111,7 +111,7 @@ def write_to_csv(data):
                 writer.writerow(row)
             except:
                 print(f"Error at writing csv: {row}")
-                error_row = {"id": row["id"], "url": "error", "status": row["status"], "chrome": row["chrome"], "layerx": row["layerx"], "CDN":row["cdn"], "error": row["error"], "redirections": row["redirections"], "japanese": row["japanese"]}
+                error_row = {"id": row["id"], "url": "error", "status": row["status"], "chrome": row["chrome"], "layerx": row["layerx"], "CDN":row["CDN"], "error": row["error"], "redirections": row["redirections"], "japanese": row["japanese"]}
                 writer.writerow(error_row)
 
 def main():
